@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LHX Music Player</title>
+<style>
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: #080808;
+    color: white;
+    font-family: Arial, sans-serif;
+    display: grid;
+    place-items: center;
+}
+.player {
+    width: 300px;
+    padding: 25px;
+    background: #171717;
+    border: 1px solid #303030;
+    border-radius: 20px;
+    text-align: center;
+}
+h2 { color: #1ed760; }
+button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 30px;
+    background: #1ed760;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+input { width: 100%; accent-color: #1ed760; }
+p { color: #aaa; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<div class="player">
+    <h2>LHX MUSIC</h2>
+    <p id="status">Music Player bereit</p>
+
+    <button id="toggle">▶ Play</button>
+
+    <p>Lautstärke</p>
+    <input id="volume" type="range" min="0" max="1"
+           step="0.01" value="0.5">
+
+    <audio id="audio" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+</div>
+
+<script>
+const audio = document.getElementById("audio");
+const toggle = document.getElementById("toggle");
+const status = document.getElementById("status");
+
+audio.volume = 0.5;
+
+toggle.addEventListener("click", async () => {
+    if (audio.paused) {
+        try {
+            await audio.play();
+            toggle.textContent = "⏸ Pause";
+            status.textContent = "Musik läuft 🎵";
+        } catch (error) {
+            status.textContent = "MP3-Datei fehlt oder ist nicht erreichbar!";
+        }
+    } else {
+        audio.pause();
+        toggle.textContent = "▶ Play";
+        status.textContent = "Musik pausiert";
+    }
+});
+
+document.getElementById("volume").addEventListener("input", e => {
+    audio.volume = Number(e.target.value);
+});
+
+audio.addEventListener("ended", () => {
+    toggle.textContent = "▶ Play";
+});
+
+audio.addEventListener("error", () => {
+    status.textContent = "MP3-Datei nicht gefunden!";
+});
+</script>
+
+</body>
+</html>
